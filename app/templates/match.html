@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Test application</title>
+        <link rel="stylesheet" type="text/css" href = {{ url_for('static', filename='match.css') }} />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script>
+            $(document).ready(function(){
+                $(".search form select").click(function(){
+                var text = $(this).text();
+                $(".search select input").attr('placeholder', 'Enter ' + text);
+                });
+            });
+            function option_Date(){
+                var x = document.getElementById("search_options").value
+                if (x  == "date"){
+                    document.getElementById("input_field").type = "date";
+                }
+                else if (x ==  "round"){
+                    document.getElementById("input_field").type = "text";
+                    document.getElementById("input_field").placeholder = 'Enter ' + x +' Number';
+                }
+                else{
+                    document.getElementById("input_field").type = "text";
+                    document.getElementById("input_field").placeholder = 'Enter ' + x +' name';
+                }
+            }
+        </script>
+        <meta http-equiv="refresh" content="40">      
+    </head>
+    <body>
+        <div id="navlist">
+            <a class= 'home' href=#>{{ title }}</a>
+            <a class ="right" href="{{ url_for('index') }}">Home</a>
+            <a class ="right" href="{{ url_for('live_tournaments') }}">Live Tournaments</a>
+            <a class ="right" href="{{ url_for('finished_tournaments') }}">Finished Tournaments</a>
+            <div class='search'>
+                <form method='POST' action="{{ url_for('search') }}">
+                    <select id="search_options" name="fields" onchange="option_Date()">
+                        <option value="player">Player</option>
+                        <option value="round">Round</option>
+                        <option value="tournament">Tournament</option>
+                        <option value="date">Date</option>
+                    </select>
+                    <input type="text" placeholder="Enter Playername" name="query" id="input_field">
+                    <button type="submit"><i class="fa fa-search"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class = "match-frame">
+            <embed src="http://localhost:8050/{{ filename }}">
+        </div>
+    </body>
+</html>
