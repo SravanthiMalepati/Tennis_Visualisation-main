@@ -23,13 +23,16 @@ def plotly(df):
     de = re.split('-|,| ',results_[0])
     de = [int(x) for x in de if x!= '']
     #columns_ = max(de)
-
+    dataframe.rename(columns={'round':'round_'}, inplace = True)
+    tournament_name = dataframe.tournament.unique()
+    round_number = dataframe.round_.unique()
     #Drops unrequired columns
-    dataframe.drop(['player1_name','player2_name','tournament','round','break_point','result','surface','date'], axis=1, inplace=True)
+    dataframe.drop(['player1_name','player2_name','tournament','round_','break_point','result','surface','date'], axis=1, inplace=True)
 
     #Finds the players names
     playernames = dataframe.server.unique()
-
+    title = (' Players: '+playernames[0]+' and '+playernames[1] +' Tournament: '+tournament_name+' Round: '+round_number)
+    
     #sets a new column as servernumber denotes 0 or 1 on basis of who is playing
     dataframe['server_number'] = np.where(dataframe['server'] == playernames[0], 0, 1)
 
@@ -92,7 +95,7 @@ def plotly(df):
 
 
     #Update height, width and title
-    fig.update_layout(autosize=False,height=1000, width=3000, title_text="Tennis Scores")
+    fig.update_layout(autosize=False,height=1000, width=3000, title_text=title[0])
 
     fig.update_yaxes(tickvals=['0', '15', '30', '40'])
 
