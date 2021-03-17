@@ -109,16 +109,24 @@ def force_write_sql():
 def insert_data(fixed_data, file_name, status, url, condition='file_name'):
     keys = ['tournament','date','round','player1_name','player2_name']
     data = list()
+   
     for i in keys:
         data.append(fixed_data[i])
+
+
+
     
+    #print(date_)
+
     date = fixed_data['date']
+    #print(date)
     index_date = date.split(' ')[0] + '20'
     index_date = index_date.split('.')
     index_date.reverse()
     index_date = '-'.join(index_date)
     result = get_result(fixed_data['result'])
     won = fixed_data['player1_name'] if result == 1 else fixed_data['player2_name']
+
 
     data.append(file_name)
     data.append(index_date)
@@ -190,7 +198,17 @@ def write_data(file_name, fixed_data, current, match, finished_df):
     file_exists = os.path.exists(f'./data/{file_name}.csv')
     if not file_exists:
         record = dict()
-        record['Date'] = fixed_data['date']
+        date_ = fixed_data['date']
+        try:
+            datetime.strptime(date_, '%d.%m.%y %H:%M')
+            date_time_obj = datetime.strptime(date_, '%d.%m.%y %H:%M')
+            date_time_obj = date_time_obj.strftime("%d.%m.%y")
+            date_ = str(date_time_obj)
+        except:
+            date_time_obj = datetime.strptime(date_, '%d.%m.%y')
+            date_time_obj = date_time_obj.strftime("%d.%m.%y")
+            date_ = str(date_time_obj)
+        record['Date'] = date_
         record['Player_1'] = fixed_data['player1_name']
         record['Player_2'] = fixed_data['player2_name']
         record['round'] = fixed_data['round']

@@ -1,4 +1,5 @@
 import pandas as pd
+
 from datetime import datetime, timedelta
 from collections import OrderedDict
 from .db import db
@@ -36,7 +37,7 @@ def matches_sql():
 
 
 def get_past_date(days = 0):
-    format = '%m-%d-%Y'
+    format = '%Y-%m-%d'
     start = datetime.today() - timedelta(days = days)
     return datetime.strptime(start.strftime(format), format)
     
@@ -84,6 +85,14 @@ def get_matches(tournament, live, **kwargs):
 
 def get_search_results(query, field):
     es_conn = es.connect_elasticsearch()
+    print(query)
+    print(type(query))
+    if field == 'date':
+        date_time_obj = datetime.strptime(query, '%Y-%m-%d')
+        date_time_obj = date_time_obj.strftime("%d.%m.%y")
+        query2 = str(date_time_obj)
+        #print(date_time_obj)
+        #print(query2)
     body = None
     matches = list()
     if field == 'round':
@@ -105,7 +114,7 @@ def get_search_results(query, field):
     elif field == 'date':
         body = { "query": {
             "multi_match" : {
-                "query":    query, 
+                "query":    query2, 
                 "fields": [ "Date" ] 
             }
             }
@@ -124,7 +133,7 @@ def get_search_results(query, field):
         for i in results['hits']['hits']:
             matches.append(i['_source'])
         es.close_connection(es_conn)
-    print(matches)
+    #print(matches)
     to_return = {query: matches}
     return to_return
     
