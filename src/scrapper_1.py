@@ -207,7 +207,7 @@ def write_data(file_name, fixed_data, current, match, finished_df):
 
 def get_matches(finished_url, date, current = False):
 
-    print(date)
+    #print(date)
     if not current:
         soup = get_url(f'{finished_url}&dm={date}')
     else:

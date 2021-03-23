@@ -16,6 +16,23 @@ def plotly(df):
     #dataframe = pd.read_csv('match_data3.csv')
     
 
+    #fill nan values with defalut data when set one or two - missing points information.
+
+    new_df = dataframe[dataframe['points'].isnull()]
+    new_df = new_df[new_df['set_index'].isin([2, 1])]
+    dataframe.drop(new_df.index[0], inplace=True)
+    points_if_1player_winner = ['0-0','15-0','30-0','40-0']
+    points_if_2player_winner = ['0-0','0-15','0-30','0-40']
+    if new_df['player1_game_score'].tolist()[0] > new_df['player2_game_score'].tolist()[0]:
+        x = (points_if_1player_winner)
+    else:
+        x = (points_if_2player_winner)
+    new_df = new_df.append([new_df]*3)
+    new_df['points'] = x
+    dataframe = dataframe.append(new_df)
+    dataframe.reset_index(inplace=True)
+    dataframe.drop(['index'], axis=1, inplace=True)
+
     #final result details
     results_ = dataframe.result.unique()
 
@@ -35,6 +52,9 @@ def plotly(df):
     
     #sets a new column as servernumber denotes 0 or 1 on basis of who is playing
     dataframe['server_number'] = np.where(dataframe['server'] == playernames[0], 0, 1)
+
+    #in the data frame we could see some points data is missing as a part of data manipulation and cleaning we are filling the empty fields with player socres like 'player1_score-player2_score'
+    dataframe['points'] = dataframe.apply(lambda x:fill_nan_in_points(x['points'],x['player1_game_score'],x['player2_game_score']),axis = 1)
 
     #follwing code takes the points and splits the points into sepeate values for two players.
     # def split_it(point):
@@ -117,6 +137,11 @@ def plotly(df):
 
 def split_it(point):
     x = point.split('-')
+    if len(x) == 2:
+        if x[0] == ' A':
+            x[0] = '45'
+        elif x[1] == 'A':
+            x[1] = '45'
     return x
 
 def set_number_(lis,set_):
@@ -127,3 +152,10 @@ def set_number_(lis,set_):
     if lis == ['0','0']:
         i = i+1
     return i
+
+def fill_nan_in_points(point, p1_score,p2_score):
+    #print(point, type(point))
+    if pd.isnull(point) or len(point) > 6:
+        #print(len(point))
+        point = str(p1_score)+'-'+str(p2_score)
+    return point
