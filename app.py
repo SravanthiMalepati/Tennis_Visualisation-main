@@ -13,8 +13,10 @@ df = pd.read_csv(path)
 app = Dash(__name__)
 app.layout = html.Div(
     [
+        #html.H1('match details', style={'backgroundColor':'rgb(0,0,0)'}),
         dcc.Graph(id='graph'),
         dcc.Location(id='url',refresh=False)
+        
         # DataTable(
         #     id="table",
         #     columns=[{"name": i, "id": i} for i in df.columns],

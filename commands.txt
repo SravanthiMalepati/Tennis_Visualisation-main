@@ -1,0 +1,3 @@
+curl -XGET 127.0.0.1:9200/matches
+curl -XGET 127.0.0.1:9200/matches/_search?pretty=true&q=*:*
+curl -XDELETE 127.0.0.1:9200/matches

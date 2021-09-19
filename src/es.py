@@ -3,7 +3,7 @@ import logging
 
 def connect_elasticsearch():
     _es = None
-    _es = Elasticsearch([{'host':'localhost', 'port':9200}])
+    _es = Elasticsearch([{'host':'localhost', 'port':9200,}])
     if _es.ping():
         print('Connected')
     else:

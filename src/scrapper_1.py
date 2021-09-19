@@ -18,6 +18,8 @@ def create_database():
     """
     global conn
     conn = db('./data/db/matches.db')
+    #conn = db('/Users/sravanthimalepati/Documents/Project/Tennis-Visualization/data/db/matches.db')
+    
     conn.create_table(create_match_sql())
 
 def create_es_index():

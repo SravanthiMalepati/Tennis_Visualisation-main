@@ -1,3 +1,4 @@
+#from plot_final import set_number_
 import pandas as pd
 import argparse
 from urllib.request import urlopen
@@ -17,7 +18,8 @@ def create_database():
     Initialize a database and create the table if not present and return True
     """
     global conn
-    conn = db('./data/db/matches.db')
+    #conn = db('./data/db/matches.db')
+    conn = db('/Users/sravanthimalepati/Documents/working_project/Tennis_Visualisation-main/data/db/matches.db')
     conn.create_table(create_match_sql())
 
 def create_es_index():
@@ -189,13 +191,13 @@ def create_match_files(match_urls, current, force_write = False):
             write_data(file_name, fixed_data, current, match, finished_df)
         elif force_write:
             insert_data(fixed_data, file_name, 'finished', '', 'status')
-            finished_df[get_col_names()].to_csv(f'./data/{file_name}.csv', index = False, header = True, mode='w')
+            finished_df[get_col_names()].to_csv(f'/Users/sravanthimalepati/Documents/working_project/Tennis_Visualisation-main/data/{file_name}.csv', index = False, header = True, mode='w')
         time.sleep(0.5)
 
     return True
 
 def write_data(file_name, fixed_data, current, match, finished_df):
-    file_exists = os.path.exists(f'./data/{file_name}.csv')
+    file_exists = os.path.exists(f'/Users/sravanthimalepati/Documents/working_project/Tennis_Visualisation-main/data/{file_name}.csv')
     if not file_exists:
         record = dict()
         date_ = fixed_data['date']
@@ -220,7 +222,7 @@ def write_data(file_name, fixed_data, current, match, finished_df):
     if current:
         insert_data(fixed_data, file_name, 'live', match)
     if not file_exists or current:       
-        finished_df[get_col_names()].to_csv(f'./data/{file_name}.csv', index = False, header = True, mode='w')
+        finished_df[get_col_names()].to_csv(f'/Users/sravanthimalepati/Documents/working_project/Tennis_Visualisation-main/data/{file_name}.csv', index = False, header = True, mode='w')
     
 
 def get_matches(finished_url, date, current = False):
@@ -251,7 +253,7 @@ def get_col_names():
 def get_rows(match):
     match_html = get_url(match)
     fixed_data = get_static_data(match_html)
-    scores_data = get_dynamic_data(match_html)
+    scores_data = get_dynamic_data(match_html,fixed_data)
     if not scores_data:
         return False, False
     rows = list()
@@ -303,29 +305,41 @@ def get_clean_result(match_html):
         tag.extract()
     return "".join(span.findAll(text=True))
 
-def get_dynamic_data(match_html):
+def get_dynamic_data(match_html,fixed_data):
+    tournament_name = fixed_data['tournament']
     scores_div = match_html.find("div", {"id": "ff_p"})
     set_tables = scores_div.findAll('table', {'class': 'table_stats_match'})
     dynamic_data = dict()
     for set in range(len(set_tables)):
-        dynamic_data[set+1] = get_scores(set_tables[set])
+        set_number = set +1
+        dynamic_data[set+1] = get_scores(set_tables[set],set_number,tournament_name)
         if not dynamic_data[set+1]:
             return False
 
     return dynamic_data
 
 
-def get_scores(set_table):
+def get_scores(set_table,set_number,tournament_name):
     rows = set_table.findChildren('tr')
-    rows = rows[1:-1] if len(rows)%2==0 else rows[1:]
+    #rows = rows[1:-1] if len(rows)%2==0 else rows[1:]
+    if len(rows)%2==0:
+        rows = rows[1:-1]
+    else:
+        rows[1:]
     score_dict = dict()
-    for row_index in range(0,len(rows), 2):
-        score , serve = get_current_score(rows[row_index])
-        if not score and not serve:
-            return False
-        points = get_points(rows[row_index + 1])
-        points.append(serve)
-        score_dict[score] = points
+    if set_number == 3 and tournament_name == "Melbourne":  
+        for row_index in range(0,len(rows)):
+            score , serve = get_current_score(rows[row_index])
+            print(score,serve)
+    else:      
+        for row_index in range(0,len(rows), 2):
+            score , serve = get_current_score(rows[row_index])
+        
+            if not score and not serve:
+                return False
+            points = get_points(rows[row_index + 1])
+            points.append(serve)
+            score_dict[score] = points
 
     return score_dict
 

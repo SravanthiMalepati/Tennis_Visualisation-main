@@ -1,0 +1,3 @@
+FLASK_APP=tennis.py
+FLASK_ENV=debug
+FLASK_DEBUG=1
