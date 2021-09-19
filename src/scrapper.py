@@ -138,16 +138,18 @@ def insert_data(fixed_data, file_name, status, url, condition='file_name'):
     data.append(url)
 
     if not conn.check_row('matches', 'file_name', file_name):
+        #print(data)
         data = tuple(data)
         conn.insert_data(insert_match_sql(), data)
     else:
+        #print(data)
         if condition == 'file_name':
             data.append(file_name)
         elif condition == 'status':
             data.append('live')
         data = tuple(data)
         conn.update_data(update_match_sql(condition), data)
-
+       
 def move_live(match_urls):
 
     if conn.check_row('matches', 'status', 'live'):
@@ -319,28 +321,33 @@ def get_dynamic_data(match_html,fixed_data):
     return dynamic_data
 
 
-def get_scores(set_table,set_number,tournament_name):
+def get_scores(set_table,set_,tournament):
     rows = set_table.findChildren('tr')
-    #rows = rows[1:-1] if len(rows)%2==0 else rows[1:]
-    if len(rows)%2==0:
-        rows = rows[1:-1]
-    else:
-        rows[1:]
+    rows = rows[1:-1] if len(rows)%2==0 else rows[1:]
     score_dict = dict()
-    if set_number == 3 and tournament_name == "Melbourne":  
+    #print(set_,tournament)
+    if set_ == 3 and tournament == ' Melbourne ':
+        #print('set 3')
+        
         for row_index in range(0,len(rows)):
-            score , serve = get_current_score(rows[row_index])
-            print(score,serve)
-    else:      
+            
+            if row_index != 1:
+                score , serve = get_current_score(rows[row_index])
+                if not score and not serve:
+                    return False
+                points = [score]
+                points.append(serve)
+                score_dict[score] = points
+    else:
+        
         for row_index in range(0,len(rows), 2):
             score , serve = get_current_score(rows[row_index])
-        
             if not score and not serve:
                 return False
             points = get_points(rows[row_index + 1])
             points.append(serve)
             score_dict[score] = points
-
+    #print(score_dict)
     return score_dict
 
 # Correct the function reflect the score and the serve

@@ -99,7 +99,7 @@ def plotly(df):
 
     playernames = dataframe.server.unique()
 
-    title = (' Players: '+playernames[0]+' and '+playernames[1] +'   Tournament: '+tournament_name+'   Round: '+round_number)
+    title = " Players: <b style='color:red'>"+playernames[0]+"</b> and <b style='color:green'>"+playernames[1] +"</b> Tournament: "+tournament_name+" Round: "+round_number
 
     
 
@@ -219,7 +219,7 @@ def plotly(df):
 
             fig.add_trace(
 
-                go.Scatter(x=x_, y=final_df['points_of_2'],line_color ="blue"),
+                go.Scatter(x=x_, y=final_df['points_of_2'],line_color ="green"),
 
                 row=k, col=r)
 
@@ -232,8 +232,13 @@ def plotly(df):
     fig.update_layout(autosize=False,height=400*len(no_of_sets), width=300*max(columns_), title_text=title[0],title_font_color ="#FFFFFF", paper_bgcolor='rgb(0,0,0)')
 
 
+
     #fig.update_yaxes(tickvals=['0', '15', '30', '40'])
-    fig.update_yaxes(tickvals=['0', '15', '30', '40'],color="#FFFFFF")
+    fig.update_yaxes(color="#FFFFFF")
+
+    #update legend
+    fig.update_layout(legend=dict(yanchor="top",y=0.99,xanchor="left",x=0.01))
+
 
 
     #Make labels disappear on x axis
