@@ -15,7 +15,7 @@ def create_match_files(match):
     
     finished_df, fixed_data = get_rows(match)
     print(finished_df.tail())
-    finished_df.to_csv(f'new.csv', index = False, header = True, mode='w')
+    finished_df.to_csv(f'new_1.csv', index = False, header = True, mode='w')
     time.sleep(0.5)
 
 
@@ -218,7 +218,8 @@ def get_result(result):
 def main():
     #fin_url = r'https://www.tennislive.net/wta/match/victoria-azarenka-VS-yulia-putintseva/grampians-trophy-melbourne-2021/'
     #fin_url = r'https://www.tennislive.net/wta/match/elise-mertens-VS-elina-svitolina/melbourne-1-melbourne-2021/'
-    fin_url = r'https://www.tennislive.net/atp/match/felix-corwin-VS-luis-faria/m25-sintra-2021/'
+    #fin_url = r'https://www.tennislive.net/atp/match/felix-corwin-VS-luis-faria/m25-sintra-2021/'
+    fin_url = r'https://www.tennislive.net/atp/match/feliciano-lopez-VS-lorenzo-sonego/australian-open-melbourne-2021/'
     create_match_files(fin_url)
 
 if __name__ == '__main__':
