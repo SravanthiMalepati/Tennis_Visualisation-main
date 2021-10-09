@@ -16,8 +16,11 @@ class db(object):
 
     def check_row(self, table_name, condition, file_name ):
         c = self.conn.cursor()
+        print(file_name)
+        print('checking rows')
         c.execute(''' SELECT count(*) FROM {} WHERE {}='{}' '''.format(table_name, condition, file_name))
         if c.fetchone()[0]>=1 :
+            print('it worked')
             return True
         return False
         
@@ -39,12 +42,14 @@ class db(object):
         cur = self.conn.cursor()
         cur.execute(sql, data)
         self.conn.commit()
+        print('inserting data')
         return cur.lastrowid
 
     def update_data(self, sql, match):
         curr = self.conn.cursor()
         curr.execute(sql, match)
         self.conn.commit()
+        print('updating data')
     
     def select_data(self,sql,condition):
         """

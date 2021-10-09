@@ -111,7 +111,7 @@ def force_write_sql():
 def insert_data(fixed_data, file_name, status, url, condition='file_name'):
     keys = ['tournament','date','round','player1_name','player2_name']
     data = list()
-   
+    
     for i in keys:
         data.append(fixed_data[i])
 
@@ -138,11 +138,11 @@ def insert_data(fixed_data, file_name, status, url, condition='file_name'):
     data.append(url)
 
     if not conn.check_row('matches', 'file_name', file_name):
-        #print(data)
+        print('inserting row with data')
         data = tuple(data)
         conn.insert_data(insert_match_sql(), data)
     else:
-        #print(data)
+        print('updating row with data')
         if condition == 'file_name':
             data.append(file_name)
         elif condition == 'status':
@@ -192,7 +192,7 @@ def create_match_files(match_urls, current, force_write = False):
         if not force_write:
             write_data(file_name, fixed_data, current, match, finished_df)
         elif force_write:
-            insert_data(fixed_data, file_name, 'finished', '', 'status')
+            insert_data(fixed_data, file_name, 'finished', '', 'file_name')
             finished_df[get_col_names()].to_csv(f'/Users/sravanthimalepati/Documents/working_project/Tennis_Visualisation-main/data/{file_name}.csv', index = False, header = True, mode='w')
         time.sleep(0.5)
 
@@ -314,19 +314,19 @@ def get_dynamic_data(match_html,fixed_data):
     dynamic_data = dict()
     for set in range(len(set_tables)):
         set_number = set +1
-        dynamic_data[set+1] = get_scores(set_tables[set],set_number,tournament_name)
+        dynamic_data[set+1] = get_scores(set_tables[set],set_number,tournament_name,len(set_tables))
         if not dynamic_data[set+1]:
             return False
 
     return dynamic_data
 
 
-def get_scores(set_table,set_,tournament):
+def get_scores(set_table,set_,tournament,set_length):
     rows = set_table.findChildren('tr')
     rows = rows[1:-1] if len(rows)%2==0 else rows[1:]
     score_dict = dict()
     #print(set_,tournament)
-    if set_ == 3 and tournament == ' Melbourne ':
+    if set_ == 3 and tournament == ' Melbourne ' and set_length == 3:
         #print('set 3')
         
         for row_index in range(0,len(rows)):

@@ -189,8 +189,9 @@ def plotly(df):
 
 
 
-    #plot
-
+    #plot    
+    dataframe = dataframe[dataframe.points.notnull()]
+    #print(dataframe.points)
     fig = make_subplots(
 
         rows=len(no_of_sets), cols=max(columns_))
