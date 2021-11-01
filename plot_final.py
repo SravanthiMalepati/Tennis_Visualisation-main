@@ -40,7 +40,9 @@ def plotly(df):
 
     new_df = dataframe[dataframe['points'].isnull()]
 
-    new_df = new_df[new_df['set_index'].isin([2, 1])]
+    #new_df = new_df[new_df['set_index'].isin([2, 1])]
+    new_df = new_df[new_df['set_index'].isin(list(dataframe['set_index'].unique()))]
+
     #print(new_df)
     if not new_df.empty:
         dataframe.drop(new_df.index[0], inplace=True)
@@ -188,19 +190,65 @@ def plotly(df):
         columns_.append(max(cleanedList))
 
 
+    game_graph = dataframe[['set_details','player1_game_score','player2_game_score','set_number']]
+    dicti = {}
+    for i in list(game_graph.set_details.unique()):
+        data = game_graph[game_graph['set_details'] == i]
+        records = ((data).set_number.unique())
+        x=[]
+        y=[]
+        for j in records:
+            data2 = ((data[data['set_number'] == j]).drop_duplicates())
+            x.append(data2['player1_game_score'].values[0])
+            y.append(data2['player2_game_score'].values[0])
+        dicti[i] = {'x':x,'y':y}
 
+    set_numbers_ = list(dataframe['set_details'].unique())
+    for r in set_numbers_:
+        data_ = dataframe[dataframe['set_details'] == r]
+        set_details_ = list(data_['set_number'].unique())
+        for rr in set_details_:
+            data__ = data_[data_['set_number']  ==rr]
+            content = data__.iloc[-1]
+            p1 = int(content['points_of_1'])
+            p2 = int(content['points_of_2'])
+            if int(p1) >= 40 or int(p2) >= 40:
+                if int(p1) > int(p2):
+                    p1 = '50'
+                else:
+                    p2 = '50'
+
+                content['points_of_1'] = p1
+                content['points_of_2'] = p2
+                dataframe = dataframe.append(content,ignore_index = True)
     #plot    
     dataframe = dataframe[dataframe.points.notnull()]
     #print(dataframe.points)
     fig = make_subplots(
 
-        rows=len(no_of_sets), cols=max(columns_))
+        rows=len(no_of_sets) + len(no_of_sets), cols=max(columns_))
     #fig.update_layout(yaxis=dict(color="#FFFFFF"))
 
 
     for k in no_of_sets:
 
         df= dataframe[dataframe['set_details']==k]
+        if k == 1:
+            k_g = k
+            k_s = k+1
+        else:
+            k_g = k_g+2
+            k_s = k_s+2
+        max_x = len(dicti[k]['x'])
+        x_ = np.arange(0,max_x,1)
+        y_ = dicti[k]['x']
+        fig.add_trace(go.Scatter(x=x_, y=y_,line_color ="red"),row=k_g, col=1)
+        max_x= (len(dicti[k]['y']))
+        x_ = x_ = np.arange(0, max_x,1)
+        y_ = dicti[k]['y']
+        fig.add_trace(go.Scatter(x=x_, y=y_,line_color ="green"),row=k_g, col=1)
+        # print(k_g)
+        # print(k_s)
 
         for r in range(1,columns_[k-1]+1):
 
@@ -216,13 +264,13 @@ def plotly(df):
 
                 go.Scatter(x=x_,y=final_df['points_of_1'],line_color = "red"),
 
-                row=k, col=r)
+                row=k_s, col=r)
 
             fig.add_trace(
 
                 go.Scatter(x=x_, y=final_df['points_of_2'],line_color ="green"),
 
-                row=k, col=r)
+                row=k_s, col=r)
 
 
 
