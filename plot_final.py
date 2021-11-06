@@ -21,6 +21,8 @@ def plotly(df):
     from plotly.subplots import make_subplots
 
     import plotly.graph_objects as go
+    import warnings
+    warnings.filterwarnings("ignore")
 
 
 
@@ -29,10 +31,6 @@ def plotly(df):
     dataframe = df
 
     #dataframe = pd.read_csv('match_data3.csv')
-
-    
-
-
 
     #fill nan values with defalut data when set one or two - missing points information.
 
@@ -242,13 +240,21 @@ def plotly(df):
         max_x = len(dicti[k]['x'])
         x_ = np.arange(0,max_x,1)
         y_ = dicti[k]['x']
+        max_1= max(y_)
         fig.add_trace(go.Scatter(x=x_, y=y_,line_color ="red"),row=k_g, col=1)
         max_x= (len(dicti[k]['y']))
         x_ = x_ = np.arange(0, max_x,1)
         y_ = dicti[k]['y']
+        max_2 = max(y_)
+        max_= max_1
+        if max_2>max_1:
+            max_= max_2
         fig.add_trace(go.Scatter(x=x_, y=y_,line_color ="green"),row=k_g, col=1)
-        # print(k_g)
-        # print(k_s)
+        fig.add_annotation(dict(font = dict(color = 'black')),
+            x=0.01, y=max_+1,
+                    text='Set:'+str(k), 
+                    showarrow=False,
+                    row=k_g, col=1)
 
         for r in range(1,columns_[k-1]+1):
 
@@ -278,7 +284,7 @@ def plotly(df):
     #Update height, width and title
 
     #fig.update_layout(autosize=False,height=400*len(no_of_sets), width=300*max(columns_), title_text=title[0])
-    fig.update_layout(autosize=False,height=400*len(no_of_sets), width=300*max(columns_), title_text=title[0],title_font_color ="#FFFFFF", paper_bgcolor='rgb(0,0,0)')
+    fig.update_layout(autosize=False,height=370*len(no_of_sets), width=200*max(columns_), title_text=title[0],title_font_color ="#FFFFFF", paper_bgcolor='rgb(0,0,0)')
 
 
 
