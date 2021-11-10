@@ -2,7 +2,7 @@ import os
 import pandas as pd
 from dash import Dash, callback_context, no_update
 from dash.dependencies import Input, Output
-from dash_table import DataTable
+#from dash_table import DataTable
 import dash_core_components as dcc
 import dash_html_components as html
 import plot_final as plot
