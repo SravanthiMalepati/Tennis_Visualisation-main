@@ -201,10 +201,7 @@ def plotly(df):
                     max_= max_2
                 ax = fig.add_trace(go.Scatter(x=x_, y=y_,line_color ="green"),row=k, col=1)
                 fig.add_annotation(dict(font = dict(color = 'black')),
-                    x=0, y=max_,
-                               text='Set:'+str(k), 
-                               showarrow=False,
-                               row=k, col=1)
+                    x=0, y=max_,text='Set:'+str(k),showarrow=False,row=k, col=1)
                 x1_value.append(x_[-1])
                 y1_value.append(max_)   
             else:
@@ -220,7 +217,7 @@ def plotly(df):
                     go.Scatter(x=x_, y=final_df['points_of_2'],line_color ="green"),row=k, col=r+1)
 
     #Update height, width and title
-    fig.update_layout(autosize=False,height=300*len(no_of_sets), width=270*max(columns_),title_text=title[0],title_font_color ="#FFFFFF", paper_bgcolor='rgb(0,0,0)',plot_bgcolor='#d1edd8')
+    fig.update_layout(autosize=False,height=300*len(no_of_sets), width=270*max(columns_),title_text=title[0],title_font_color ="#FFFFFF", paper_bgcolor='rgb(0,0,0)') #,plot_bgcolor="#FFFFFF")
     if len(no_of_sets) == 1 and max(columns_) < 5:
         fig.update_layout(autosize=False,height=500,width=1500)
     #fig.update_yaxes(tickvals=['0', '15', '30', '40'])
@@ -238,18 +235,21 @@ def plotly(df):
     #Display all charts
     #fig.show()
     b =[]
+    c = []
     for i in range(0,len(xref_value)):
         b1 = dict(
                                                     type="rect",
                                                     xref=xref_value[i],
                                                     yref=yref_value[i],
                                                     x0 = -1.2,y0= -1.2,y1=y1_value[i]+1.7,x1=x1_value[i]+2,
+                                                    line=dict(color="blue",width=4),
                                                     fillcolor="lightgray",
                                                     opacity=1,
                                                     layer="below",
-                                                    line_width=0
                                                 )
         b.append(b1)
+
+        
     fig.update_layout(shapes=b)
     return fig
 
