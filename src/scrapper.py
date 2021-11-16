@@ -142,7 +142,7 @@ def insert_data(fixed_data, file_name, status, url, condition='file_name'):
         data = tuple(data)
         conn.insert_data(insert_match_sql(), data)
     else:
-        # print('updating row with data')
+        #print('updating row with data')
         if condition == 'file_name':
             data.append(file_name)
         elif condition == 'status':
