@@ -1,5 +1,4 @@
 def plotly(df):
-
     #Required packages
     import pandas as pd
     import numpy as np
@@ -211,10 +210,10 @@ def plotly(df):
                                                     xref=xref_value[i],
                                                     yref=yref_value[i],
                                                     x0 = -1.2,y0= -1.2,y1=y1_value[i]+1.7,x1=x1_value[i]+2,
-                                                    fillcolor="white",
+                                                    line=dict(color="blue",width=4),
+                                                    fillcolor="lightgray",
                                                     opacity=1,
                                                     layer="below",
-                                                    line_width=0
                                                 )
         b.append(b1)
     fig.update_layout(shapes=b)

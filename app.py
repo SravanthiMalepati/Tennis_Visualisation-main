@@ -5,7 +5,7 @@ from dash.dependencies import Input, Output
 #from dash_table import DataTable
 import dash_core_components as dcc
 import dash_html_components as html
-import plot_final as plot
+import plot_final_new as plot
 
 path = "./data/sample_tennis_data_table.csv"
 df = pd.read_csv(path)
