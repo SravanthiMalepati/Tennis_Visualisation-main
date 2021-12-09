@@ -16,14 +16,10 @@ class db(object):
 
     def check_row(self, table_name, condition, file_name ):
         c = self.conn.cursor()
-        #print(file_name)
-        #print('checking rows')
         c.execute(''' SELECT count(*) FROM {} WHERE {}='{}' '''.format(table_name, condition, file_name))
         if c.fetchone()[0]>=1 :
-            #print('it worked')
             return True
-        return False
-        
+        return False  
     def create_table(self, create_table_sql):
         """
         Create a table from the create_table_sql statement
@@ -34,32 +30,24 @@ class db(object):
             c = self.conn.cursor()
             c.execute(create_table_sql)
         except Error as e:
-            print(e)
-        
+            print(e)  
         self.conn.commit()
-    
     def insert_data(self, sql, data):
         cur = self.conn.cursor()
         cur.execute(sql, data)
         self.conn.commit()
-        #print('inserting data')
         return cur.lastrowid
-
     def update_data(self, sql, match):
         curr = self.conn.cursor()
         curr.execute(sql, match)
         self.conn.commit()
-        #print('updating data')
-    
     def select_data(self,sql,condition):
         """
         Query tasks by condition
         """
         cur = self.conn.cursor()
         cur.execute(sql, condition)
-
         rows = cur.fetchall()
-
         return rows
     def close(self):
         self.conn.close()

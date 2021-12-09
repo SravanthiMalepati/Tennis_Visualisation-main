@@ -450,24 +450,18 @@ def generate_dates(from_date, to_date):
         edate = datetime.strptime(to_date, '%Y-%m-%d')
     except ValueError:
         raise ValueError("Incorrect data format, should be YYYY-MM-DD")
-
     curr_date = datetime.today().strftime('%Y-%m-%d') 
     curr_date = datetime.strptime(curr_date, '%Y-%m-%d')
     edate = edate if edate<=curr_date else curr_date
-
-    result = [from_date]
-      
+    result = [from_date]     
     while sdate<edate:              
         sdate+=timedelta(days=1)
         result.append(sdate.strftime('%Y-%m-%d'))
 
     return result
-
-
 def main():
     parser = get_parser()
     args = parser.parse_args()
-
     url = 'http://www.tennislive.net/'
     curr_url, fin_url = get_menu_links(url)
     create_database()
